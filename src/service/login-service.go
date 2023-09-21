@@ -5,6 +5,7 @@ import (
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/chromedp"
 	"github.com/fatih/color"
+	"github.com/spf13/viper"
 	"hubu-wlan-connect/config"
 	"strings"
 	"time"
@@ -26,12 +27,11 @@ func clearInput() chromedp.QueryAction {
 
 // 填写不同的值到不同的输入框
 func fillInput(node *cdp.Node) chromedp.QueryAction {
-	getConfig := config.GetConfig()
 	getName, _ := node.Attribute("name")
 	if getName == "username" {
-		return chromedp.SendKeys(node.FullXPath(), getConfig.Number)
+		return chromedp.SendKeys(node.FullXPath(), viper.GetString(config.USERNAME))
 	} else {
-		return chromedp.SendKeys(node.FullXPath(), getConfig.Password)
+		return chromedp.SendKeys(node.FullXPath(), viper.GetString(config.PASSWORD))
 	}
 }
 
@@ -95,9 +95,15 @@ func mockLogin() bool {
 // DoLoginRetry 执行带重试的登录
 func DoLoginRetry() {
 	// 最大重试次数
-	maxCount := config.GetConfig().Retry
+	maxCount := viper.GetInt(config.RETRY)
 	// 当前是否已登录成功
 	success := false
+	// 执行延迟数
+	delay := viper.GetInt(config.DELAY)
+	if delay > 0 {
+		color.Yellow("将在%d秒后开始执行登录操作...", delay)
+		time.Sleep(time.Duration(delay) * time.Second)
+	}
 	// 先执行一次登录操作
 	color.HiBlue("开始执行登录操作...")
 	success = mockLogin()

@@ -1,3 +1,5 @@
 /**/.idea/
 /**/target/
-config.cfg
+/**/*.iml
+/config.yaml
+/**/*.syso

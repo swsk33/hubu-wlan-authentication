@@ -1,0 +1,50 @@
+{
+	"RT_GROUP_ICON": {
+		"APP": {
+			"0000": [
+				"icon.png",
+				"icon16.png"
+			]
+		}
+	},
+	"RT_MANIFEST": {
+		"#1": {
+			"2052": {
+				"description": "湖北大学校园网登录",
+				"minimum-os": "win7",
+				"execution-level": "administrator",
+				"ui-access": false,
+				"auto-elevate": false,
+				"dpi-awareness": "system",
+				"disable-theming": false,
+				"disable-window-filtering": false,
+				"high-resolution-scrolling-aware": false,
+				"ultra-high-resolution-scrolling-aware": false,
+				"long-path-aware": false,
+				"printer-driver-isolation": false,
+				"gdi-scaling": false,
+				"segment-heap": false,
+				"use-common-controls-v6": false
+			}
+		}
+	},
+	"RT_VERSION": {
+		"#1": {
+			"0000": {
+				"fixed": {
+					"file_version": "1.0.1.0"
+				},
+				"info": {
+					"2052": {
+						"CompanyName": "swsk33",
+						"FileDescription": "用于湖北大学校园网的自动认证程序",
+						"LegalCopyright": "© swsk33",
+						"OriginalFilename": "hubu-wlan.exe",
+						"ProductName": "湖北大学校园网认证",
+						"ProductVersion": "1.0.1.0"
+					}
+				}
+			}
+		}
+	}
+}

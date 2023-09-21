@@ -5,7 +5,6 @@ import (
 	"github.com/fatih/color"
 	"os"
 	"os/exec"
-	"path/filepath"
 )
 
 // 开机自启动逻辑
@@ -23,9 +22,7 @@ var startCommand string
 // SetupAppPath 初始化程序自身所在路径以完成启动命令初始化
 func SetupAppPath() {
 	path, _ := os.Executable()
-	dirPath := filepath.Dir(path)
-	// 启动命令将延迟3s执行
-	startCommand = fmt.Sprintf("cmd /c timeout /t 3 && cd /d \"%s\" && \"%s\"", dirPath, path)
+	startCommand = fmt.Sprintf("\"%s\"", path)
 }
 
 // SetAutoStart 将自己本身添加至开机自启动程序
