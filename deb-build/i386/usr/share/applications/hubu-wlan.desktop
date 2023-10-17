@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=湖北大学校园网自动认证
+Comment=能够自动完成湖北大学校园网的认证程序
+Version=2.0.0
+Exec=/opt/hubu-wlan-connect/hubu-wlan
+Path=/opt/hubu-wlan-connect
+Icon=/opt/hubu-wlan-connect/icon.png
+Terminal=true
+Type=Application
+Categories=Network
+StartupNotify=true

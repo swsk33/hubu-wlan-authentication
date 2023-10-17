@@ -3,3 +3,6 @@
 /**/*.iml
 /config.yaml
 /**/*.syso
+/deb-build/*/etc/
+/deb-build/*/opt/
+/deb-build/*/usr/bin/

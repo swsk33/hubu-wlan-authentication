@@ -1,0 +1,10 @@
+Package: hubu-wlan-connect
+Version: 2.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: google-chrome-stable
+Installed-Size: 2839
+Maintainer: swsk33<example@163.com>
+Provides: swsk33
+Description: 用于自动完成湖北大学校园网的认证程序

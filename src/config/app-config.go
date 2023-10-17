@@ -35,6 +35,7 @@ func SetupConfig() error {
 	// 设定配置文件可能在的文件夹
 	viper.AddConfigPath(".")
 	viper.AddConfigPath(filepath.Dir(SelfPath))
+	viper.AddConfigPath("/etc/hubu-wlan")
 	err := viper.ReadInConfig()
 	if err != nil {
 		color.Red("找不到配置文件！请将配置文件放在运行目录或者和可执行文件同级目录下，名为config.yaml\n")
