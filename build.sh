@@ -73,6 +73,7 @@ function build_deb() {
 	cp -f ./linux/${1}/${basename} ../deb-build/${1}/opt/hubu-wlan-connect/
 	cp -f ../winres/icon.png ../deb-build/${1}/opt/hubu-wlan-connect/
 	cp -f ./config.yaml ../deb-build/${1}/etc/hubu-wlan/
+	rm ../deb-build/${1}/usr/bin/hubu-wlan
 	ln -s /opt/hubu-wlan-connect/${basename} ../deb-build/${1}/usr/bin/hubu-wlan
 	dpkg -b ../deb-build/${1}/ ./out/${basename}-${version}-debian-${1}.deb
 }
