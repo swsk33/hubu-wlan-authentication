@@ -1,35 +1,31 @@
 package service
 
 import (
-	"fmt"
 	"github.com/fatih/color"
+	"hubu-wlan-connect/strategy/context"
 	"os"
-	"os/exec"
+	"runtime"
 )
 
 // 开机自启动逻辑
 
-const (
-	// 注册表名
-	appName = "HubuWLANAuth"
-	// 注册表键所在路径
-	regKey = "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-)
-
-// 程序的启动命令
-var startCommand string
+// 程序自身路径
+var selfPath string
 
 // SetupAppPath 初始化程序自身所在路径以完成启动命令初始化
 func SetupAppPath() {
-	path, _ := os.Executable()
-	startCommand = fmt.Sprintf("\"%s\"", path)
+	selfPath, _ = os.Executable()
 }
 
 // SetAutoStart 将自己本身添加至开机自启动程序
 func SetAutoStart() {
-	cmd := exec.Command("reg", "add", regKey, "/v", appName, "/t", "REG_SZ", "/d", startCommand, "/f")
-	err := cmd.Run()
-	if err != nil {
+	strategy, e1 := context.GetStrategy(runtime.GOOS)
+	if e1 != nil {
+		color.Red(e1.Error())
+		return
+	}
+	e2 := (*strategy).AddAutoStart(selfPath)
+	if e2 != nil {
 		color.Red("添加开机启动项失败！请以管理员身份重新运行该程序！")
 		return
 	}
@@ -38,9 +34,13 @@ func SetAutoStart() {
 
 // RemoveAutoStart 移除开机启动
 func RemoveAutoStart() {
-	cmd := exec.Command("reg", "delete", regKey, "/v", appName, "/f")
-	err := cmd.Run()
-	if err != nil {
+	strategy, e1 := context.GetStrategy(runtime.GOOS)
+	if e1 != nil {
+		color.Red(e1.Error())
+		return
+	}
+	e2 := (*strategy).RemoveAutoStart()
+	if e2 != nil {
 		color.Red("移除开机启动项失败！请以管理员身份重新运行该程序！")
 		return
 	}
