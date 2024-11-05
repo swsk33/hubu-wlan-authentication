@@ -36,14 +36,28 @@ hubu-wlan version
 
 ### (2) 自动补全脚本
 
-下载解压后，除了命令程序本身`exe`文件，还有下列脚本文件，是用于命令自动补全的，将该脚本配置到对应的终端后，使用`hubu-wlan`命令时即可按下Tab键自动补全命令：
+下载解压后，除了命令程序本身`exe`文件，还有下列脚本文件，是用于命令自动补全的，将该脚本配置到对应的终端后，使用`hubu-wlan`命令时即可按下Tab键自动补全命令。
+
+在Windows环境下：
 
 - `hubu-wlan.fish` 用于Fish Shell的自动补全脚本，在Windows中通常是在Msys2环境下运行Fish Shell，将该文件放到`你的Msys2安装目录\etc\fish\completions`目录下即可，请勿修改文件名
 - `hubu-wlan-completion.bash` 用于Bash Shell的自动补全脚本，在Windows中可以在Git Bash或者Msys2环境中运行Bash Shell，这里分别说明：
 	- 使用Git Bash时，将`hubu-wlan-completion.bash`文件的扩展名改成`sh`，然后放到`你的Git安装目录\etc\profile.d`目录下
 	- 使用Msys2时，直接把`hubu-wlan-completion.bash`文件放在`你的Msys2安装目录\etc\bash_completion.d`目录下
 
+在Linux环境下，使用Bash Shell时，请先确保安装了`bash-completion`包：
+
+```bash
+sudo apt install bash-completion
+```
+
+然后把`hubu-wlan-completion.bash`放置到`/etc/bash_completion.d`目录下即可，若该目录不存在则创建。
+
+在Linux下使用Fish Shell时，将`hubu-wlan.fish`直接放到`/etc/fish/completions`目录下即可，若该目录不存在则创建。
+
 将文件放在对应位置后，配置就完成了，重启终端，后续在使用`hubu-wlan`命令时，即可使用Tab键补全命令。
+
+> 使用`deb`安装包安装时会包含自动补全脚本配置，无需再手动复制补全脚本。
 
 ### (3) 配置
 

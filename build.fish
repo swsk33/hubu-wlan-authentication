@@ -88,24 +88,35 @@ xz -z -e $base_output/$basename-$app_version-linux-amd64.tar
 function build_deb
     set arch $argv[1]
     echo 构建Debian {$arch}安装包...
-    mkdir -p ./deb-build/$arch/opt/hubu-wlan-connect
-    mkdir -p ./deb-build/$arch/etc/hubu-wlan
-    mkdir -p ./deb-build/$arch/usr/bin
+    set build_app_root ./deb-build/$arch
+    # 复制可执行文件
+    set app_path $build_app_root/opt/hubu-wlan-connect/
+    mkdir -p $app_path
     set exe_path
     if test "$arch" = i386
         set exe_path $linux_i386_output/$basename
     else
         set exe_path $linux_amd64_output/$basename
     end
-    cp -f $exe_path ./deb-build/$arch/opt/hubu-wlan-connect/
-    cp -f ./winres/icon.png ./deb-build/$arch/opt/hubu-wlan-connect/
-    cp -f $config_output_file ./deb-build/$arch/etc/hubu-wlan/
-    set link_path ./deb-build/$arch/usr/bin/hubu-wlan
-    if test -f $link_path
+    cp -f $exe_path $app_path
+    cp -f ./winres/icon.png $app_path
+    # 创建链接
+    mkdir -p $build_app_root/usr/bin
+    set link_path $build_app_root/usr/bin/hubu-wlan
+    if test -L $link_path
         rm $link_path
     end
     ln -s /opt/hubu-wlan-connect/$basename $link_path
-    dpkg -b ./deb-build/$arch/ $base_output/$basename-$app_version-debian-$arch.deb
+    # 复制配置
+    mkdir -p $build_app_root/etc/hubu-wlan
+    cp -f $config_output_file $build_app_root/etc/hubu-wlan/
+    # 复制自动补全脚本
+    mkdir -p $build_app_root/etc/bash_completion.d
+    cp -f $script_output/*.bash $build_app_root/etc/bash_completion.d/
+    mkdir -p $build_app_root/etc/fish/completions
+    cp -f $script_output/*.fish $build_app_root/etc/fish/completions/
+    # 执行打包
+    dpkg -b $build_app_root/ $base_output/$basename-$app_version-debian-$arch.deb
 end
 
 build_deb i386
