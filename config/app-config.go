@@ -28,11 +28,6 @@ var GlobalConfig AppConfig
 var SelfPath string
 
 func init() {
-	// 仅在执行认证登录命令时进行配置初始化
-	args := os.Args[1:]
-	if len(args) != 0 && args[0] != "auth" {
-		return
-	}
 	var e error
 	// 初始化自己路径
 	SelfPath, e = os.Executable()
@@ -40,6 +35,11 @@ func init() {
 		sclog.ErrorLine("获取自身路径失败！")
 		sclog.ErrorLine(e.Error())
 		os.Exit(1)
+	}
+	// 仅在执行认证登录命令时进行配置初始化
+	args := os.Args[1:]
+	if len(args) != 0 && args[0] != "auth" {
+		return
 	}
 	// 设定配置文件名
 	viper.SetConfigName("config")
