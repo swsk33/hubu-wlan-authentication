@@ -31,7 +31,7 @@
 		"#1": {
 			"0000": {
 				"fixed": {
-					"file_version": "2.0.0.0"
+					"file_version": "2.2.0.0"
 				},
 				"info": {
 					"2052": {
@@ -40,7 +40,7 @@
 						"LegalCopyright": "© swsk33",
 						"OriginalFilename": "hubu-wlan.exe",
 						"ProductName": "湖北大学校园网认证",
-						"ProductVersion": "2.0.0.0"
+						"ProductVersion": "2.2.0.0"
 					}
 				}
 			}

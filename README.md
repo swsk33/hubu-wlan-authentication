@@ -24,6 +24,16 @@ sudo dpkg -i hubu-wlan-x.x.x-debian-xxx.deb
 
 除此之外，该程序依赖Google Chrome浏览器，若电脑上没有安装Google Chrome，该程序也无法正常运行，可以到[官网](https://google.cn/chrome/)下载安装。
 
+下载了`7z`或者`tar.xz`包并解压后，请将可执行文件所在目录加入到`Path`系统环境变量，使得在终端中可以直接调用`hubu-wlan`命令，配置环境变量后，可通过下列命令测试是否配置成功：
+
+```bash
+hubu-wlan version
+```
+
+如果能够输出版本号信息，说明配置环境变量成功。
+
+如果是通过Linux的`deb`安装包安装，则无需配置环境变量，直接在终端里就可以调用该命令。
+
 ### (2) 配置
 
 如果你下载的是Windows系统对应的`7z`压缩包或者是Linux系统的`tar.xz`包，那么只需下载并解压缩，在解压缩得到的文件中就包含名为`config.yaml`的文件，即为该程序的配置文件，初始时其内容如下：
@@ -64,21 +74,23 @@ sudo vim /etc/hubu-wlan/config.yaml
 
 启动程序后，程序就会帮助你完成认证操作，显示登录成功即可。
 
+此外，也可以在终端中调用`hubu-wlan`命令一键登录：
+
+```bash
+hubu-wlan auth
+```
+
 ### (4) 自动认证（开机自启动）
 
-在Windows系统上，下载的压缩包中除了程序和配置文件之外，还有`add-auto-start.bat`和`remove-auto-start.bat`这两个脚本，双击`add-auto-start.bat`即可将该程序添加至开机自启动列表，这样开机的时候程序就会自动启动完成校园网认证操作，如果不想再开机自启了，则双击`remove-auto-start.bat`移除开机自启动项即可。
-
-在Linux系统上，通过终端调用`hubu-wlan`进行操作，首先使用`cd`命令进入到你的`hubu-wlan`所在目录，然后执行下列命令：
+通过终端调用`hubu-wlan`进行操作，执行下列命令：
 
 ```bash
 # 启用开机自启动
-./hubu-wlan enable-auto-start
+hubu-wlan auto-start add
 
 # 禁用开机自启动
-./hubu-wlan disable-auto-start
+hubu-wlan auto-start remove
 ```
-
-如果你是通过`deb`安装包进行安装的，那么就可以在终端里直接调用`hubu-wlan`命令，像上述一样传入`enable-auto-start`或者`disable-auto-start`作为参数来开启或者关闭开机自启动。
 
 需要注意的是，添加开机自启动后，就不要再改变可执行文件和配置文件的所在位置了！否则会导致开机自启时找不到程序。
 

@@ -1,8 +1,8 @@
-/**/.idea/
-/**/target/
-/**/*.iml
+.idea/
+target/
+*.iml
 /config.yaml
-/**/*.syso
+*.syso
 /deb-build/*/etc/
 /deb-build/*/opt/
 /deb-build/*/usr/bin/

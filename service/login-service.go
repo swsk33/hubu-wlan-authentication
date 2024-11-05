@@ -2,10 +2,9 @@ package service
 
 import (
 	"context"
+	"gitee.com/swsk33/sclog"
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/chromedp"
-	"github.com/fatih/color"
-	"github.com/spf13/viper"
 	"hubu-wlan-connect/config"
 	"strings"
 	"time"
@@ -29,9 +28,9 @@ func clearInput() chromedp.QueryAction {
 func fillInput(node *cdp.Node) chromedp.QueryAction {
 	getName, _ := node.Attribute("name")
 	if getName == "username" {
-		return chromedp.SendKeys(node.FullXPath(), viper.GetString(config.USERNAME))
+		return chromedp.SendKeys(node.FullXPath(), config.GlobalConfig.Username)
 	} else {
-		return chromedp.SendKeys(node.FullXPath(), viper.GetString(config.PASSWORD))
+		return chromedp.SendKeys(node.FullXPath(), config.GlobalConfig.Password)
 	}
 }
 
@@ -48,7 +47,7 @@ func mockLogin() bool {
 	// 登录成功标题选取
 	const successSelector = "#success-form .form-signin-heading"
 	// 创建浏览器上下文
-	timeoutContext, cancel1 := context.WithTimeout(context.Background(), 8*time.Second)
+	timeoutContext, cancel1 := context.WithTimeout(context.Background(), 6*time.Second)
 	webContext, cancel2 := chromedp.NewContext(timeoutContext)
 	defer cancel1()
 	defer cancel2()
@@ -58,17 +57,17 @@ func mockLogin() bool {
 	var successTip string
 	// 开始执行
 	// 先导航至登录页并等待页面加载完成，并获取用户名和密码框
-	e1 := chromedp.Run(webContext, chromedp.Tasks{
+	e := chromedp.Run(webContext, chromedp.Tasks{
 		chromedp.Navigate(url),
 		chromedp.WaitVisible("body"),
 		chromedp.Nodes(input, &inputNodes),
 	})
-	if e1 != nil {
-		color.Red("加载登录页时出现错误！\n%s", e1)
+	if e != nil {
+		sclog.Error("加载登录页时出现错误！%s\n", e)
 		return false
 	}
 	// 最后填写账户密码并登录
-	e2 := chromedp.Run(webContext, chromedp.Tasks{
+	e = chromedp.Run(webContext, chromedp.Tasks{
 		// 填写用户名和密码
 		fillInput(inputNodes[0]),
 		fillInput(inputNodes[1]),
@@ -85,8 +84,8 @@ func mockLogin() bool {
 		chromedp.WaitVisible(successSelector, chromedp.ByQuery),
 		chromedp.Text(successSelector, &successTip),
 	})
-	if e2 != nil {
-		color.Red("进行登录时出现错误！\n%s", e2)
+	if e != nil {
+		sclog.Error("进行登录时出现错误！%s\n", e)
 		return false
 	}
 	return strings.Contains(successTip, "成功")
@@ -94,27 +93,24 @@ func mockLogin() bool {
 
 // DoLoginRetry 执行带重试的登录
 func DoLoginRetry() {
-	// 最大重试次数
-	maxCount := viper.GetInt(config.RETRY)
 	// 当前是否已登录成功
 	success := false
-	// 执行延迟数
-	delay := viper.GetInt(config.DELAY)
+	delay := config.GlobalConfig.Delay
 	if delay > 0 {
-		color.Yellow("将在%d秒后开始执行登录操作...", delay)
+		sclog.Info("将在%d秒后开始执行登录操作...\n", delay)
 		time.Sleep(time.Duration(delay) * time.Second)
 	}
 	// 先执行一次登录操作
-	color.HiBlue("开始执行登录操作...")
+	sclog.InfoLine("开始执行登录操作...")
 	success = mockLogin()
 	// 如果失败则重试
-	for count := 1; !success && count <= maxCount; count++ {
-		color.HiRed("登录失败！正在进行第%d次重试...", count)
+	for count := 1; !success && count <= config.GlobalConfig.Retry; count++ {
+		sclog.Warn("登录失败！正在进行第%d次重试...\n", count)
 		success = mockLogin()
 	}
 	if success {
-		color.Green("登录成功！")
+		sclog.InfoLine("登录成功！")
 	} else {
-		color.HiRed("登录失败！请确保已连接无线网络并且用户名密码正确！")
+		sclog.ErrorLine("登录失败！请确保已连接无线网络并且用户名密码正确！")
 	}
 }

@@ -18,10 +18,10 @@ type WindowsAutoStart struct {
 
 // AddAutoStart 将自己本身添加至开机自启动程序
 func (autoStart *WindowsAutoStart) AddAutoStart(exePath string) error {
-	cmd := exec.Command("reg", "add", regKey, "/v", appName, "/t", "REG_SZ", "/d", fmt.Sprintf("\"%s\"", exePath), "/f")
-	err := cmd.Run()
-	if err != nil {
-		return err
+	cmd := exec.Command("reg", "add", regKey, "/v", appName, "/t", "REG_SZ", "/d", fmt.Sprintf("\"%s\" auth", exePath), "/f")
+	e := cmd.Run()
+	if e != nil {
+		return e
 	}
 	return nil
 }
@@ -29,9 +29,9 @@ func (autoStart *WindowsAutoStart) AddAutoStart(exePath string) error {
 // RemoveAutoStart 移除开机启动
 func (autoStart *WindowsAutoStart) RemoveAutoStart() error {
 	cmd := exec.Command("reg", "delete", regKey, "/v", appName, "/f")
-	err := cmd.Run()
-	if err != nil {
-		return err
+	e := cmd.Run()
+	if e != nil {
+		return e
 	}
 	return nil
 }
