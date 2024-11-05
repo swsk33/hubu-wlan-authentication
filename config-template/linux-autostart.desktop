@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=湖北大学校园网自动认证
 Comment=能够自动完成湖北大学校园网的认证
-Version=2.0.0
+Version=1.0
 Terminal=false
 Type=Application
 Categories=Network
