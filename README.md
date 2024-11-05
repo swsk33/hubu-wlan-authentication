@@ -34,7 +34,18 @@ hubu-wlan version
 
 如果是通过Linux的`deb`安装包安装，则无需配置环境变量，直接在终端里就可以调用该命令。
 
-### (2) 配置
+### (2) 自动补全脚本
+
+下载解压后，除了命令程序本身`exe`文件，还有下列脚本文件，是用于命令自动补全的，将该脚本配置到对应的终端后，使用`hubu-wlan`命令时即可按下Tab键自动补全命令：
+
+- `hubu-wlan.fish` 用于Fish Shell的自动补全脚本，在Windows中通常是在Msys2环境下运行Fish Shell，将该文件放到`你的Msys2安装目录\etc\fish\completions`目录下即可，请勿修改文件名
+- `hubu-wlan-completion.bash` 用于Bash Shell的自动补全脚本，在Windows中可以在Git Bash或者Msys2环境中运行Bash Shell，这里分别说明：
+	- 使用Git Bash时，将`hubu-wlan-completion.bash`文件的扩展名改成`sh`，然后放到`你的Git安装目录\etc\profile.d`目录下
+	- 使用Msys2时，直接把`hubu-wlan-completion.bash`文件放在`你的Msys2安装目录\etc\bash_completion.d`目录下
+
+将文件放在对应位置后，配置就完成了，重启终端，后续在使用`hubu-wlan`命令时，即可使用Tab键补全命令。
+
+### (3) 配置
 
 如果你下载的是Windows系统对应的`7z`压缩包或者是Linux系统的`tar.xz`包，那么只需下载并解压缩，在解压缩得到的文件中就包含名为`config.yaml`的文件，即为该程序的配置文件，初始时其内容如下：
 
@@ -64,7 +75,9 @@ sudo vim /etc/hubu-wlan/config.yaml
 
 编写配置完成后，该程序即可使用。
 
-### (3) 手动认证
+除了`deb`安装的情况，解压后的配置文件必须和可执行文件位于同一目录下！
+
+### (4) 手动认证
 
 修改完配置文件后，即可运行程序：
 
@@ -80,7 +93,7 @@ sudo vim /etc/hubu-wlan/config.yaml
 hubu-wlan auth
 ```
 
-### (4) 自动认证（开机自启动）
+### (5) 自动认证（开机自启动）
 
 通过终端调用`hubu-wlan`进行操作，执行下列命令：
 
@@ -96,7 +109,7 @@ hubu-wlan auto-start remove
 
 若启用了开机自启动，在Windows操作系统上开机时会显示一个命令行窗口并显示程序的执行状态，请勿手动关闭，在认证完成后程序会自动退出，在Linux系统上开机自启动是在后台运行的，因此你看不到程序运行的命令行窗口。
 
-### (5) 卸载
+### (6) 卸载
 
 如果你是通过`deb`安装包安装，可以使用下列命令进行卸载：
 

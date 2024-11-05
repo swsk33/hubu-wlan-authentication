@@ -26,9 +26,12 @@ go-winres make --in "./winres/winres.json"
 
 # 生成自动补全脚本
 set script_output $base_output/script
+mkdir -p $script_output
 echo 开始构建自动补全脚本...
 go run main.go completion bash >$script_output/$basename-completion.bash
 go run main.go completion fish >$script_output/$basename.fish
+sed -i 1d $script_output/$basename-completion.bash
+sed -i 1d $script_output/$basename.fish
 
 # 构建Windows程序
 set win_i386_output $base_output/win/i386
@@ -73,13 +76,12 @@ echo "delay: 3" >>"$config_output_file"
 
 # 打包
 echo 进行打包...
-7z a -t7z -mx9 $base_output/$basename-$app_version-windows-i386.7z $win_i386_output/$basename.exe $config_output_file $script_output/*
-7z a -t7z -mx9 $base_output/$basename-$app_version-windows-amd64.7z $win_amd64_output/$basename.exe $config_output_file $script_output/*
-7z a -ttar $base_output/$basename-$app_version-linux-i386.tar $linux_i386_output/$basename $config_output_file $script_output/*
-7z a -ttar $base_output/$basename-$app_version-linux-amd64.tar $linux_amd64_output/$basename $config_output_file $script_output/*
+7z a -t7z -mx9 $base_output/$basename-$app_version-windows-i386.7z ./$win_i386_output/$basename.exe ./$config_output_file ./$script_output/*
+7z a -t7z -mx9 $base_output/$basename-$app_version-windows-amd64.7z ./$win_amd64_output/$basename.exe ./$config_output_file ./$script_output/*
+7z a -ttar $base_output/$basename-$app_version-linux-i386.tar ./$linux_i386_output/$basename ./$config_output_file ./$script_output/*
+7z a -ttar $base_output/$basename-$app_version-linux-amd64.tar ./$linux_amd64_output/$basename ./$config_output_file ./$script_output/*
 xz -z -e $base_output/$basename-$app_version-linux-i386.tar
 xz -z -e $base_output/$basename-$app_version-linux-amd64.tar
-
 
 # 构建deb安装包
 # 参数1：构建架构，可以是i386或者amd64
@@ -98,12 +100,22 @@ function build_deb
     cp -f $exe_path ./deb-build/$arch/opt/hubu-wlan-connect/
     cp -f ./winres/icon.png ./deb-build/$arch/opt/hubu-wlan-connect/
     cp -f $config_output_file ./deb-build/$arch/etc/hubu-wlan/
-    rm ./deb-build/$arch/usr/bin/hubu-wlan
-    ln -s /opt/hubu-wlan-connect/$basename ../deb-build/$arch/usr/bin/hubu-wlan
-    dpkg -b ../deb-build/$arch/ ./out/$basename-$app_version-debian-$arch.deb
+    set link_path ./deb-build/$arch/usr/bin/hubu-wlan
+    if test -f $link_path
+        rm $link_path
+    end
+    ln -s /opt/hubu-wlan-connect/$basename $link_path
+    dpkg -b ./deb-build/$arch/ $base_output/$basename-$app_version-debian-$arch.deb
 end
 
 build_deb i386
 build_deb amd64
 
 echo 构建完成！结果位于{$base_output}目录下
+
+# 清理构建
+echo 清理构建...
+rm -r $script_output
+rm -r (dirname $config_output_file)
+rm -r ./target/win
+rm -r ./target/linux
