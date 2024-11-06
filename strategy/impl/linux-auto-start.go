@@ -38,7 +38,7 @@ func (autoStart *LinuxAutoStart) AddAutoStart(exePath string) error {
 	}
 	// 准备写入
 	writer := bufio.NewWriter(file)
-	_, e = writer.WriteString(fmt.Sprintf("\nExec=\"%s\" auth", exePath))
+	_, e = writer.WriteString(fmt.Sprintf("\nExec=\"%s\"", exePath))
 	_, e = writer.WriteString(fmt.Sprintf("\nPath=%s", filepath.Dir(exePath)))
 	defer func() {
 		_ = writer.Flush()
